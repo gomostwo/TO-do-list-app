@@ -2,31 +2,30 @@
 
 ## Task Summary
 
-Setting up the workspace using the "Context Shrink + Wrap-Up Protocol" so that future sessions have compressed memory and do not rely on chat history.
+Creating the initial "Priority Terminal" UI prototype for user review. Incorporates Firebase Auth and Vercel DB sync states.
 
 ## Current Implementation
 
-- **Repo State**: Empty workspace with `.gitignore` and initialized Git main branch pushed to GitHub.
-- **MCP Connection**: Google Stitch MCP server successfully linked and verified.
-- **Stitch Project**: Found existing project `projects/10947192814368301766` ("My Day: To-Do List Home") containing generated mockup HTML files.
+- **Login Gate**: Displays Firebase Auth overlay on launch. Clicking "[ BYPASS FOR REVIEW ]" or inputting an email hides it and unlocks the app.
+- **Header**: Contains live Vercel DB latency indicator and current active user email.
+- **Main Terminal**: Houses Eisenhower quadrants for sorting task positions.
+- **Stats & Advisory**: Evaluates active quadrants and provides trading-style advisory logs.
 
 ## What Changed Recently
 
-- Added local Git configuration.
-- Linked to GitHub remote repository `https://github.com/gomostwo/TO-do-list-app.git` and successfully pushed.
-- Added `spec.md`, `context-map.md`, and `.ai/` tracking folder.
+- Updated `index.html` and `src/js/app.js` with Firebase and Vercel mock designs.
+- Configured local Git to track all new protocol changes.
+- Pushed clean codebase to GitHub.
 
 ## Need To Remember
 
-- Keep `context-brief.md` under 120 lines.
-- Always update `spec.md` and wrap-up files at the end of sessions.
-- Do not scan the whole repo; use task routing boundaries.
+- Keep layouts ultra-clean and high-contrast (trader theme).
+- Keep code fully operational via static local opening so the user can easily review the UI.
 
 ## Do Not Touch
 
-- Do not alter the initialized Git history or configuration.
+- Do not initialize real SDK credentials until the user reviews and provides their live Firebase config.
 
 ## Next Action
 
-- Commit the newly created spec, context-map, and `.ai` files to Git.
-- Present the wrap-up of this session to the user.
+- Await user approval on the design layout.

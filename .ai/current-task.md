@@ -2,41 +2,37 @@
 
 ## Goal
 
-Adopt the Context Shrink + Wrap-Up Protocol structure in the repository, create templates/initial brief, and complete the current session setup.
+Create the design UI mockup for a task prioritization app featuring Google Firebase Auth and Vercel DB sync indicators for user review.
 
 ## Problem
 
-The repository needs clear guidelines, specification files, context maps, and task files to optimize memory context usage for AI agent workflows.
+The UI needs to look clean, minimal, and tailored for trading speed, highlighting priority metrics clearly.
 
 ## Expected Behavior
 
-- Create `spec.md`
-- Create `context-map.md`
-- Create `.ai/current-task.md`
-- Create `.ai/context-brief.md`
-- Create `.ai/wrap-up.md`
-- Track the initial state of the codebase.
+- Custom dark theme UI layout.
+- Firebase Auth Login Gate mockup.
+- Live performance indicators (Focus, Streak, Urgent Risks).
+- Eisenhower quadrant task organization.
+- Simulated Vercel DB sync indicator.
 
 ## Scope
 
 Allowed to edit:
-- `spec.md`
-- `context-map.md`
+- `index.html`
+- `src/css/style.css`
+- `src/js/app.js`
 - `.ai/*`
-
-Do not edit:
-- `.gitignore` (unless needed)
+- `spec.md`
 
 ## Relevant Areas
 
-- `/` (root directory)
-- `/.ai/`
+- Root folder files
 
 ## Acceptance Criteria
 
-- [x] `spec.md` created and populated
-- [x] `context-map.md` created and populated
-- [x] `.ai/current-task.md` created
-- [x] `.ai/context-brief.md` created
-- [x] `.ai/wrap-up.md` created
-- [ ] Make a Git commit with these setup files
+- [x] Login overlay designed and functional.
+- [x] Quadrants grid populated and reactive.
+- [x] Sync states reflect CRUD action latencies.
+- [x] Stats update dynamically.
+- [x] Commited to Git and pushed to remote branch.

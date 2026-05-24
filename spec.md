@@ -1,33 +1,34 @@
-# Project Spec: My Day - To-Do List App
+# Project Spec: My Day - Priority Terminal
 
 ## Architecture
 
-- **Frontend**: HTML5, Vanilla JavaScript, CSS (styled with TailwindCSS via CDN as designed in Google Stitch)
-- **Backend**: None (pure client-side)
-- **Database**: LocalStorage for persisting tasks
-- **Auth**: None
-- **External APIs**: None (uses Google Stitch for UI layouts)
+- **Frontend**: HTML5, Vanilla JavaScript, CSS (styled with TailwindCSS via CDN)
+- **Backend / Services**: 
+  - Google Firebase Authentication (Email/Password + Google Login)
+  - Vercel Database (Postgres serverless for CRUD task management)
+- **Deployment Platform**: Responsive Web / Capacitor for native Android & iOS wrapper containers.
 
 ## Data Contracts
 
-### API Contracts
-
-*No external API contracts.*
-
-### Component / State Contracts
+### State / Component Contracts
 
 ```ts
+interface User {
+  email: string;
+}
+
 interface Task {
   id: string;
   title: string;
-  time?: string;
+  quadrant: 'q1' | 'q2' | 'q3' | 'q4';
   completed: boolean;
-  backgroundImageUrl?: string;
+  time?: string; // Optional deadline
 }
 
 interface AppState {
+  user: User | null;
   tasks: Task[];
-  streakCount: number;
+  streak: number;
 }
 ```
 
@@ -35,9 +36,10 @@ interface AppState {
 
 ### Decision Log
 
-* **Decision**: Local storage persistence.
-  * **Reason**: Simple setup for offline-first, client-only task tracking.
-  * **Tradeoff**: Limited to a single device/browser.
+* **Decision**: Next.js/Vite with Capacitor integration.
+  * **Reason**: Enables 100% UI fidelity across web, Android, and iOS, allowing direct connection to Vercel Database and Firebase Auth SDKs.
+* **Decision**: Eisenhower Matrix Task Quadrants.
+  * **Reason**: Optimal prioritizing layout for quick execution, matching high-intensity trading flow.
 
 ## Done
 
@@ -45,24 +47,26 @@ interface AppState {
 * [x] Add standard `.gitignore`
 * [x] Configure local developer Git identity
 * [x] Set up Google Stitch MCP connection
-* [x] Verify Stitch API connection health
+* [x] Create high-fidelity "Priority Terminal" web UI prototype
+* [x] Implement mock Firebase Auth gate & login bypass
+* [x] Implement mock Vercel DB sync latency simulation
+* [x] Push progress to remote GitHub repository
 
 ## Todo
 
-* [ ] Download and review all Stitch mockup screens
-* [ ] Create the HTML structure for "My Day: To-Do List Home"
-* [ ] Implement local storage state management
-* [ ] Implement task completion and add task interactivity
-* [ ] Implement task suggestion feature
-* [ ] Implement goals and social screens
+* [ ] Integrate live Google Firebase Auth SDK
+* [ ] Integrate live Vercel Postgres DB API
+* [ ] Set up Capacitor mobile platforms
+* [ ] Deploy Android application package (APK)
+* [ ] Deploy iOS application package
 
 ## Current State
 
-Currently working on: Setting up repo structure and rules.
+Currently working on: Awaiting user review of the UI mockups.
 
-Last completed: First Git commit and remote push.
+Last completed: Updated UI prototype with Firebase Auth and Vercel DB state.
 
-Next step: Import Stitch mockups and build the main page.
+Next step: Integrate real SDK configurations once UI is approved.
 
 Known blockers: None.
 

@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Priority Terminal - Trader-Style Task Manager</title>
+  <!-- Google Fonts: Orbitron & Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Orbitron:wght@500;700;900&display=swap" rel="stylesheet">
+  <!-- Material Symbols Outlined -->
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            mono: ['Orbitron', 'monospace'],
+          },
+          colors: {
+            terminal: {
+              bg: '#0A0F1D',
+              surface: '#121829',
+              surfaceLighter: '#1B233D',
+              border: '#242F4D',
+              text: '#E2E8F0',
+              textMuted: '#64748B',
+              primary: '#00F0FF',
+              success: '#00E676',
+              danger: '#FF1744',
+              warning: '#FFD600',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <!-- Custom CSS for Glassmorphism & Animations -->
+  <link rel="stylesheet" href="src/css/style.css">
+</head>
+<body class="bg-terminal-bg text-terminal-text font-sans selection:bg-terminal-primary selection:text-black min-h-screen flex flex-col">
+
+  <!-- Authentication Overlay (Firebase Auth Mockup) -->
+  <div id="auth-overlay" class="fixed inset-0 bg-terminal-bg/95 backdrop-blur-md z-[100] flex items-center justify-center p-4 transition-all duration-300">
+    <div class="bg-terminal-surface border border-terminal-border w-full max-w-md rounded-2xl p-8 shadow-[0_0_50px_rgba(0,240,255,0.08)] flex flex-col gap-6">
+      <div class="text-center">
+        <div class="h-12 w-12 bg-terminal-primary/10 border border-terminal-primary/30 rounded-xl mx-auto flex items-center justify-center shadow-[0_0_15px_rgba(0,240,255,0.1)] mb-4">
+          <span class="material-symbols-outlined text-terminal-primary text-2xl animate-pulse">lock</span>
+        </div>
+        <h2 class="text-xl font-bold font-mono tracking-wider text-white">AUTHENTICATION_REQUIRED</h2>
+        <p class="text-xs text-terminal-textMuted tracking-wider font-mono mt-1">SECURE CONNECTION VIA GOOGLE FIREBASE</p>
+      </div>
+
+      <div class="flex flex-col gap-3">
+        <!-- Google Sign-In Mock -->
+        <button id="btn-google-login" 
+          class="w-full bg-white hover:bg-slate-100 text-black font-semibold text-sm py-3 px-4 rounded-lg flex items-center justify-center gap-3 transition-all hover:shadow-[0_0_15px_rgba(255,255,255,0.2)]">
+          <svg class="h-5 w-5" viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg">
+            <g transform="matrix(1, 0, 0, 1, 0, 0)">
+              <path d="M21.35,11.1H12v2.7h5.38c-0.24,1.28 -0.96,2.37 -2.04,3.1v2.57h3.3c1.93,-1.78 3.04,-4.4 3.04,-7.47C21.68,11.96 21.56,11.5 21.35,11.1z" fill="#4285F4"/>
+              <path d="M12,20.68c2.43,0 4.47,-0.8 5.96,-2.2l-3.3,-2.57c-0.9,0.6 -2.07,0.97 -3.3,0.97 -2.34,0 -4.33,-1.58 -5.04,-3.7H2.92v2.66C4.4,18.88 8.01,20.68 12,20.68z" fill="#34A853"/>
+              <path d="M6.96,13.18C6.78,12.64 6.68,12.08 6.68,11.5c0,-0.58 0.1,-1.14 0.28,-1.68V7.16H2.92C2.3,8.4 1.95,9.9 1.95,11.5c0,1.6 0.35,3.1 0.97,4.34L6.96,13.18z" fill="#FBBC05"/>
+              <path d="M12,4.82c1.32,0 2.51,0.45 3.44,1.35l2.58,-2.58C16.46,2.12 14.42,1.32 12,1.32c-4,0 -7.6,1.8 -9.08,4.52l4.04,3.14C7.67,6.4 9.66,4.82 12,4.82z" fill="#EA4335"/>
+            </g>
+          </svg>
+          Sign in with Google
+        </button>
+
+        <div class="relative flex py-2 items-center">
+          <div class="flex-grow border-t border-terminal-border"></div>
+          <span class="flex-shrink mx-4 text-terminal-textMuted text-[10px] font-mono">OR</span>
+          <div class="flex-grow border-t border-terminal-border"></div>
+        </div>
+
+        <!-- Email & Password Inputs -->
+        <div class="flex flex-col gap-3">
+          <input type="email" id="auth-email" placeholder="Email address" 
+            class="bg-terminal-bg border border-terminal-border rounded-lg px-4 py-3 text-sm text-terminal-text placeholder-terminal-textMuted focus:outline-none focus:border-terminal-primary transition-all">
+          <input type="password" id="auth-password" placeholder="Password" 
+            class="bg-terminal-bg border border-terminal-border rounded-lg px-4 py-3 text-sm text-terminal-text placeholder-terminal-textMuted focus:outline-none focus:border-terminal-primary transition-all">
+        </div>
+
+        <button id="btn-email-login" 
+          class="w-full bg-terminal-surfaceLighter border border-terminal-border hover:border-terminal-primary hover:text-terminal-primary text-white font-bold font-mono text-sm py-3 px-4 rounded-lg transition-all">
+          SIGN IN / REGISTER
+        </button>
+
+        <button id="btn-bypass-auth" 
+          class="w-full text-terminal-primary/60 hover:text-terminal-primary font-mono text-xs py-2 transition-all">
+          [ BYPASS FOR REVIEW (MOCK MODE) ]
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Header -->
+  <header class="border-b border-terminal-border bg-terminal-surface/80 backdrop-blur-md sticky top-0 z-50 px-6 py-4">
+    <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
+      <div class="flex items-center gap-3">
+        <div class="h-8 w-8 bg-terminal-primary rounded flex items-center justify-center shadow-[0_0_15px_rgba(0,240,255,0.4)]">
+          <span class="material-symbols-outlined text-black font-bold">query_stats</span>
+        </div>
+        <div>
+          <h1 class="text-xl font-bold font-mono tracking-wider text-white">PRIORITY<span class="text-terminal-primary">_TERMINAL</span></h1>
+          <p class="text-xs text-terminal-textMuted tracking-widest font-mono">STATUS: SYNCED // LIVE_MARKET_MODE</p>
+        </div>
+      </div>
+
+      <!-- Sync & User Status -->
+      <div class="flex items-center gap-4 text-xs font-mono">
+        <div class="flex items-center gap-2 bg-terminal-bg border border-terminal-border rounded-full px-3 py-1.5">
+          <span id="sync-icon" class="material-symbols-outlined text-xs text-terminal-success animate-spin" style="animation-duration: 3s;">sync</span>
+          <span id="sync-status" class="text-terminal-text">VERCEL DB: ONLINE (14ms)</span>
+        </div>
+        <div id="user-display" class="flex items-center gap-2 bg-terminal-bg border border-terminal-border rounded-full px-3 py-1.5">
+          <span class="material-symbols-outlined text-xs text-terminal-primary">account_circle</span>
+          <span id="user-email" class="text-terminal-text">mock.trader@terminal.io</span>
+          <button id="btn-signout" class="text-terminal-danger hover:text-white transition-colors ml-1 font-bold">
+            [OUT]
+          </button>
+        </div>
+      </div>
+
+      <!-- Live Performance Metrics -->
+      <div class="flex items-center gap-6 font-mono text-xs">
+        <div class="bg-terminal-surface border border-terminal-border rounded px-4 py-2 flex flex-col items-center">
+          <span class="text-terminal-textMuted text-[10px]">FOCUS RATE</span>
+          <span id="focus-score" class="text-terminal-primary font-bold text-sm">100%</span>
+        </div>
+        <div class="bg-terminal-surface border border-terminal-border rounded px-4 py-2 flex flex-col items-center">
+          <span class="text-terminal-textMuted text-[10px]">STREAK</span>
+          <div class="flex items-center gap-1 text-terminal-warning font-bold text-sm">
+            <span class="material-symbols-outlined text-sm">local_fire_department</span>
+            <span id="streak-count">3</span>
+          </div>
+        </div>
+        <div class="bg-terminal-surface border border-terminal-border rounded px-4 py-2 flex flex-col items-center">
+          <span class="text-terminal-textMuted text-[10px]">URGENT RISKS</span>
+          <span id="urgent-count" class="text-terminal-danger font-bold text-sm">0</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Workspace -->
+  <main class="flex-grow max-w-7xl w-full mx-auto p-6 flex flex-col gap-6">
+    
+    <!-- Quick Add Form -->
+    <section class="bg-terminal-surface border border-terminal-border rounded-xl p-5 shadow-lg">
+      <h2 class="text-sm font-mono text-terminal-primary uppercase tracking-wider mb-3 flex items-center gap-2">
+        <span class="material-symbols-outlined text-sm">add_circle</span> Add Position (New Task)
+      </h2>
+      <form id="task-form" class="flex flex-col lg:flex-row gap-3">
+        <input type="text" id="task-title" required placeholder="Enter task objective..." 
+          class="bg-terminal-bg border border-terminal-border rounded-lg px-4 py-3 text-sm text-terminal-text placeholder-terminal-textMuted focus:outline-none focus:border-terminal-primary flex-grow transition-all">
+        
+        <div class="flex flex-wrap sm:flex-nowrap gap-3">
+          <!-- Quadrant Selector -->
+          <select id="task-quadrant" 
+            class="bg-terminal-bg border border-terminal-border rounded-lg px-3 py-3 text-sm text-terminal-text focus:outline-none focus:border-terminal-primary transition-all">
+            <option value="q1">Q1: Urgent & Important</option>
+            <option value="q2">Q2: Not Urgent & Important</option>
+            <option value="q3">Q3: Urgent & Not Important</option>
+            <option value="q4">Q4: Not Urgent & Not Important</option>
+          </select>
+          
+          <!-- Deadline/Timer Optional -->
+          <input type="time" id="task-time" 
+            class="bg-terminal-bg border border-terminal-border rounded-lg px-3 py-3 text-sm text-terminal-text focus:outline-none focus:border-terminal-primary transition-all">
+          
+          <button type="submit" 
+            class="bg-terminal-primary text-black font-bold font-mono text-sm px-6 py-3 rounded-lg hover:bg-white hover:shadow-[0_0_15px_rgba(255,255,255,0.4)] transition-all flex items-center justify-center gap-2">
+            <span class="material-symbols-outlined text-sm font-bold">bolt</span>EXECUTE
+          </button>
+        </div>
+      </form>
+    </section>
+
+    <!-- Quadrants Grid -->
+    <section class="grid grid-cols-1 md:grid-cols-2 gap-6 flex-grow">
+      
+      <!-- Q1: Urgent & Important -->
+      <div class="border border-terminal-danger/40 bg-terminal-surface/30 rounded-xl overflow-hidden flex flex-col shadow-[0_4px_20px_rgba(255,23,68,0.05)]">
+        <div class="bg-terminal-danger/10 border-b border-terminal-danger/20 px-4 py-3 flex justify-between items-center">
+          <div class="flex items-center gap-2">
+            <span class="h-2 w-2 rounded-full bg-terminal-danger animate-ping"></span>
+            <span class="text-xs font-mono font-bold text-terminal-danger tracking-wider">Q1 // HIGH RISKS (URGENT & IMPORTANT)</span>
+          </div>
+          <span class="text-[10px] text-terminal-danger font-mono font-bold bg-terminal-danger/10 px-2 py-0.5 rounded border border-terminal-danger/30">DO NOW</span>
+        </div>
+        <div class="p-4 flex-grow flex flex-col gap-3 min-h-[220px]" id="q1-list">
+          <!-- Tasks injected here -->
+        </div>
+      </div>
+
+      <!-- Q2: Not Urgent & Important -->
+      <div class="border border-terminal-primary/40 bg-terminal-surface/30 rounded-xl overflow-hidden flex flex-col shadow-[0_4px_20px_rgba(0,240,255,0.05)]">
+        <div class="bg-terminal-primary/10 border-b border-terminal-primary/20 px-4 py-3 flex justify-between items-center">
+          <div class="flex items-center gap-2">
+            <span class="h-2 w-2 rounded-full bg-terminal-primary"></span>
+            <span class="text-xs font-mono font-bold text-terminal-primary tracking-wider">Q2 // STRATEGIC VALUE (IMPORTANT)</span>
+          </div>
+          <span class="text-[10px] text-terminal-primary font-mono font-bold bg-terminal-primary/10 px-2 py-0.5 rounded border border-terminal-primary/30">PLAN</span>
+        </div>
+        <div class="p-4 flex-grow flex flex-col gap-3 min-h-[220px]" id="q2-list">
+          <!-- Tasks injected here -->
+        </div>
+      </div>
+
+      <!-- Q3: Urgent & Not Important -->
+      <div class="border border-terminal-warning/40 bg-terminal-surface/30 rounded-xl overflow-hidden flex flex-col shadow-[0_4px_20px_rgba(255,214,0,0.05)]">
+        <div class="bg-terminal-warning/10 border-b border-terminal-warning/20 px-4 py-3 flex justify-between items-center">
+          <div class="flex items-center gap-2">
+            <span class="h-2 w-2 rounded-full bg-terminal-warning"></span>
+            <span class="text-xs font-mono font-bold text-terminal-warning tracking-wider">Q3 // DELEGATE / SCHEDULE (URGENT)</span>
+          </div>
+          <span class="text-[10px] text-terminal-warning font-mono font-bold bg-terminal-warning/10 px-2 py-0.5 rounded border border-terminal-warning/30">DELEGATE</span>
+        </div>
+        <div class="p-4 flex-grow flex flex-col gap-3 min-h-[220px]" id="q3-list">
+          <!-- Tasks injected here -->
+        </div>
+      </div>
+
+      <!-- Q4: Not Urgent & Not Important -->
+      <div class="border border-terminal-border bg-terminal-surface/30 rounded-xl overflow-hidden flex flex-col">
+        <div class="bg-terminal-surface border-b border-terminal-border px-4 py-3 flex justify-between items-center">
+          <div class="flex items-center gap-2">
+            <span class="h-2 w-2 rounded-full bg-terminal-textMuted"></span>
+            <span class="text-xs font-mono font-bold text-terminal-textMuted tracking-wider">Q4 // BACKLOG / LOW IMPACT</span>
+          </div>
+          <span class="text-[10px] text-terminal-textMuted font-mono font-bold bg-terminal-surface px-2 py-0.5 rounded border border-terminal-border">ELIMINATE</span>
+        </div>
+        <div class="p-4 flex-grow flex flex-col gap-3 min-h-[220px]" id="q4-list">
+          <!-- Tasks injected here -->
+        </div>
+      </div>
+
+    </section>
+
+    <!-- Visual Dashboard (Charts & Insights) -->
+    <section class="bg-terminal-surface border border-terminal-border rounded-xl p-5 shadow-lg flex flex-col lg:flex-row justify-between gap-6">
+      <div class="flex-1">
+        <h3 class="text-sm font-mono text-white uppercase tracking-wider mb-4 flex items-center gap-2">
+          <span class="material-symbols-outlined text-sm text-terminal-primary">monitoring</span> Analytics & Insights
+        </h3>
+        
+        <!-- Interactive Heatmap / Completion Candlestick -->
+        <div class="h-32 bg-terminal-bg rounded border border-terminal-border p-4 flex items-end justify-between gap-2 relative">
+          <!-- Guidelines -->
+          <div class="absolute inset-0 flex flex-col justify-between p-4 pointer-events-none opacity-10">
+            <div class="border-b border-terminal-text w-full"></div>
+            <div class="border-b border-terminal-text w-full"></div>
+            <div class="border-b border-terminal-text w-full"></div>
+          </div>
+          <!-- Bar 1 -->
+          <div class="flex-grow flex flex-col justify-end items-center h-full group relative">
+            <span class="text-[9px] font-mono text-terminal-textMuted mb-1 opacity-0 group-hover:opacity-100 transition-opacity">80%</span>
+            <div class="w-full max-w-[40px] bg-terminal-primary/40 group-hover:bg-terminal-primary h-[80%] rounded-t transition-all"></div>
+            <span class="text-[9px] font-mono text-terminal-textMuted mt-1">MON</span>
+          </div>
+          <!-- Bar 2 -->
+          <div class="flex-grow flex flex-col justify-end items-center h-full group relative">
+            <span class="text-[9px] font-mono text-terminal-textMuted mb-1 opacity-0 group-hover:opacity-100 transition-opacity">95%</span>
+            <div class="w-full max-w-[40px] bg-terminal-primary/40 group-hover:bg-terminal-primary h-[95%] rounded-t transition-all"></div>
+            <span class="text-[9px] font-mono text-terminal-textMuted mt-1">TUE</span>
+          </div>
+          <!-- Bar 3 -->
+          <div class="flex-grow flex flex-col justify-end items-center h-full group relative">
+            <span class="text-[9px] font-mono text-terminal-textMuted mb-1 opacity-0 group-hover:opacity-100 transition-opacity">60%</span>
+            <div class="w-full max-w-[40px] bg-terminal-primary/40 group-hover:bg-terminal-primary h-[60%] rounded-t transition-all"></div>
+            <span class="text-[9px] font-mono text-terminal-textMuted mt-1">WED</span>
+          </div>
+          <!-- Bar 4 (Today - Active) -->
+          <div class="flex-grow flex flex-col justify-end items-center h-full group relative">
+            <span id="chart-today-val" class="text-[9px] font-mono text-terminal-success mb-1">0%</span>
+            <div id="chart-today-bar" class="w-full max-w-[40px] bg-terminal-success/50 group-hover:bg-terminal-success h-[0%] rounded-t transition-all shadow-[0_0_10px_rgba(0,230,118,0.2)]"></div>
+            <span class="text-[9px] font-mono text-terminal-success font-bold mt-1">TODAY</span>
+          </div>
+        </div>
+      </div>
+      
+      <div class="w-full lg:w-80 flex flex-col justify-between gap-4">
+        <div class="bg-terminal-bg rounded border border-terminal-border p-4 h-full flex flex-col justify-between">
+          <div>
+            <h4 class="text-xs font-mono text-terminal-textMuted uppercase mb-1">FOCUS OPTIMIZATION ADVISORY</h4>
+            <p id="advisory-text" class="text-xs leading-relaxed text-terminal-text font-mono">
+              [ANALYSIS]: Terminal is in wait mode. Add positions to calculate real-time strategic execution.
+            </p>
+          </div>
+          <div class="text-[10px] font-mono text-terminal-primary/80 mt-2 flex justify-between items-center">
+            <span>TERMINAL V1.0</span>
+            <span class="animate-pulse">● LIVE</span>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="border-t border-terminal-border bg-terminal-surface px-6 py-4 text-center text-xs text-terminal-textMuted font-mono">
+    &copy; 2026 PRIORITY TERMINAL INC. // ALL RIGHTS RESERVED // DESIGNED FOR TRADING SPEED
+  </footer>
+
+  <!-- App JavaScript -->
+  <script src="src/js/app.js"></script>
+</body>
+</html>
